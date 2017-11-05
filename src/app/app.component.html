@@ -1,15 +1,51 @@
 <div class="container">
-  <div class="form">
-    <div id="title">
-      <input type="text" placeholder="title here..." #title>
+    <div class="form">
+      <div class="input">
+        <input type="text" placeholder="title here..." #title>
+      </div>
+      <div class="input">
+        <input type="text" placeholder="description" #description>
+      </div>
+      <div class="input">
+        <input type="submit" value="Create TODO ITEM" (click)="addTodo(title.value, description.value)">
+      </div>
     </div>
-    <div class="description">
-      <input type="text" placeholder="description" #description>
+</div>
+<div class="todo-container">
+  <div class="filter">
+    <h3 style="margin: 10px">Filter by:</h3>
+    <div class="sort">
+      <h4>Title</h4>
+      <input (keyup)="sortByTitle(sortTitle.value)" style="width: 100%;border:none 0" type="text" #sortTitle placeholder="title ...">
     </div>
-    <input type="submit" value="Create TODO ITEM" (click)="addTodo(title.value, description.value)">
+    <div class="date-sort">
+      <h4 style="text-align: left">Date</h4>
+      <input type="date" (change)="sortByDate(sortDate.value)" #sortDate>
+    </div>
+  </div>
+  <div class="todo-container-inner">
+  <div *ngFor="let todo of sortedArray | slice:startIndex:lastIndex; let i = index" class="todo-items">
+    <div class="title-container">
+      <div class="title">{{todo.title}}</div>
+      <div class="title-close" (click)="removeTodo(i)" style="cursor: pointer">x</div>
+    </div>
+    <div class="description">{{todo.description}}</div>
+    <div class="date">added:{{todo.created_at}}</div>
+
+  </div>
   </div>
 </div>
-<div *ngFor="let res of todoList">
-  <div>{{res.title}}</div>
-  <div>{{res.description}}</div>
+<div class="pagination">
+  <div class="pages"
+       *ngFor="let page of pagesArray; let pageNumber = index"
+       (click)="pagination(pageNumber + 1)">
+    <div *ngIf="currerntPage === pageNumber + 1; then currentPage else otherPage"></div>
+    <ng-template #currentPage>
+      <div style="background-color:white;color: lightgray">{{pageNumber + 1}}</div>
+    </ng-template>
+    <ng-template #otherPage>
+      <div>{{pageNumber + 1}}</div>
+    </ng-template>
+  </div>
 </div>
+
